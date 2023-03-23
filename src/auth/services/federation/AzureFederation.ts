@@ -6,21 +6,33 @@ export class AzureFederation implements IFederation{
       const jwtService = new JwtService();
 
       type Payload = {
-        tid : string
+        tid : string,
+        preferred_username: string,
+        sub: string
+        name: string,
       }
 
       const { tid } = jwtService.decode(token) as Payload;
 
       const verify = (await import('azure-ad-verify-token')).verify;
 
-      verify(token, {
-        jwksUri: process.env.JWKURI,
+      const ticket = await verify(token, {
+        jwksUri: process.env.JWKS_URI,
         issuer: `https://login.microsoftonline.com/${tid}/v2.0`,
         audience: process.env.AZURE_CLIENT_ID,
       })
-      .then((decoded) => {
+      .then(decoded => {
         // verified and decoded token
-        console.log(decoded);
+        const payload = decoded as Payload;
+
+        const data = {
+          email: payload.preferred_username,
+          full_name: payload.name,
+          sub: payload.sub,
+          image: '',
+        }
+
+        return data;
       })
       .catch((error) => {
         // invalid token
@@ -28,6 +40,11 @@ export class AzureFederation implements IFederation{
         logger.error(error);
         throw new BadRequestException("Error de validación de token");
       });
+
+      if(!ticket){
+        return null;
+      }
+      return ticket;
     }
     
 }

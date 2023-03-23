@@ -1,7 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { ErrorMessages } from 'src/common/enum/error-messages.enum';
-import { User } from 'src/user/entities/user.entity';
 import { UsersService } from 'src/user/user.service';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 import { CreatorFactory } from './services/factory/CreatorFactory';
 
 @Injectable()
@@ -9,31 +10,29 @@ export class AuthService {
 
   constructor(
     private usersService: UsersService,
+    private jwtService: JwtService,
   ){}
   
-  async login({
-    email,
-    name,
-    image,
-  }: {
-    email: string;
-    name: string;
-    image?: string;
-  }): Promise<any> {
-    if((await this.usersService.findBy({ where: { email: email } }))[0])
-          throw new BadRequestException("User already exists");
-      const user = new User();
-      
-      Object.assign(user, {email,name,image});
-
-      return await this.usersService.store(user);
-  }
-
   async loginUser(token:string, creatorFactory:CreatorFactory) {
-    const isTokenValid = await creatorFactory.checkToken(token);//CreateAzureFederation instead of creatorFactory
-    if(!isTokenValid){
+    const payload = await creatorFactory.checkToken(token);//CreateAzureFederation instead of creatorFactory
+    if(!payload){
       throw new BadRequestException(ErrorMessages.NOT_VALID_TOKEN)
     }
+    let user = await this.usersService.findByEmail(payload.email);
+
+    if(!user){
+      const createUserDto:CreateUserDto = {
+          username:payload.email,
+          password:null,
+          full_name: payload.full_name,
+          image_url: payload.picture,
+          sub:payload.sub,
+          is_active: true
+      }
+      user = await this.usersService.store(createUserDto);
+    }
+    const access_token = this.jwtService.sign({ username: payload.email }, {secret: process.env.JWT_SECRET })
+    return {...user,access_token}
   }
 
   async registerUser(token: string){

@@ -6,6 +6,7 @@ import {
     HttpStatus,
   } from '@nestjs/common';
   import { HttpAdapterHost } from '@nestjs/core';
+import { ErrorMessages } from '../enum/error-messages.enum';
   
   @Catch()
   export class AllExceptionsFilter implements ExceptionFilter {
@@ -22,21 +23,25 @@ import {
         exception instanceof HttpException
           ? exception.getStatus()
           : HttpStatus.INTERNAL_SERVER_ERROR;
+      
+      let requestException = {} ////captura todas las excepciones
+      let httpMessage = ErrorMessages.INTERNAL_SERVER_ERROR
 
-      const httpMessage =
-          exception instanceof HttpException
-            ? exception.message
-            : HttpStatus.INTERNAL_SERVER_ERROR;
+      if(exception instanceof HttpException){
+        const reqException = exception.getResponse()
+        httpMessage = reqException["error"]
+        requestException = reqException["message"]
+      }
             
       //Consumir servicio para registrar el error en base de datos.
       
-
       const responseBody = {
         statusCode: httpStatus,
-        timestamp: new Date().toISOString(),
-        path: httpAdapter.getRequestUrl(ctx.getRequest()),
-        message: httpMessage,
-        method:ctx.getRequest().method
+        // timestamp: new Date().toISOString(),
+        // path: httpAdapter.getRequestUrl(ctx.getRequest()),
+        message: requestException,
+        error: httpMessage,
+        // method:ctx.getRequest().method
       };
   
       httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);

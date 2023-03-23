@@ -14,8 +14,16 @@ export class GoogleFederation implements IFederation {
                 idToken: token,
                 audience: process.env.GOOGLE_CLIENT_ID,
             });
-            console.log(ticket.getPayload());
-            return ticket.getPayload();
+            // console.log(ticket.getPayload());
+            if(!ticket){
+                return null
+            }
+            return {
+                email: ticket.getPayload().email,
+                full_name: ticket.getPayload().name,
+                sub: ticket.getPayload().sub,
+                pictre: ticket.getPayload().picture
+            }
         }
         catch(error){
             const logger = new Logger("GoogleFederation");

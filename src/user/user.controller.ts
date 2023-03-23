@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Param, Delete, UseGuards, NotFoundExceptio
 import { UsersService } from './user.service';
 import { CreateUpdateUser } from './dto/createUpdateUser.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -23,7 +24,7 @@ export class UsersController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  async store(@Body() data: CreateUpdateUser) {
+  async store(@Body() data: CreateUserDto) {
     return await this.userService.store(data);
   }
 
