@@ -41,7 +41,7 @@ import { ConfigModule } from '@nestjs/config';
       database: process.env.DATABASE,
       entities: [ User, Question ],
       subscribers: [ QuestionSubscriber ],
-      autoLoadEntities: true,
+      autoLoadEntities: false,
       synchronize: true,
       ssl: true
     }),
