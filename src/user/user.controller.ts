@@ -11,7 +11,7 @@ export class UsersController {
   constructor(private userService: UsersService) {}
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   async index() {
     return this.userService.findAll();
   }
