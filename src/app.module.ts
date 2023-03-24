@@ -41,8 +41,9 @@ import { ConfigModule } from '@nestjs/config';
       database: process.env.DATABASE,
       entities: [ User, Question ],
       subscribers: [ QuestionSubscriber ],
-      autoLoadEntities: false,
-      synchronize: true
+      autoLoadEntities: true,
+      synchronize: true,
+      ssl: true
     }),
     WinstonModule.forRoot({
       transports: [
