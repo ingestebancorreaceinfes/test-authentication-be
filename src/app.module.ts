@@ -47,26 +47,26 @@ import { ConfigModule } from '@nestjs/config';
         "ssl": process.env.SSL 
       },
     }),
-    WinstonModule.forRoot({
-      transports: [
-        new transports.File({
-          // dirname: './../log/debug/', //path to where save loggin result 
-          filename: 'info.log', //name of file where will be saved logging result
-          level: 'info',
-          format: format.combine(format.timestamp(), format.json()),
+    // WinstonModule.forRoot({
+    //   transports: [
+    //     new transports.File({
+    //       // dirname: './../log/debug/', //path to where save loggin result 
+    //       filename: 'info.log', //name of file where will be saved logging result
+    //       level: 'info',
+    //       format: format.combine(format.timestamp(), format.json()),
           
-        }),
-        new MongoDB({
-          level: 'info',
-          db: 'mongodb+srv://Tatiana:Mnbv9874@proyecto.vaxnwo8.mongodb.net/test?retryWrites=true&w=majority',
-          options: {
-            useUnifiedTopology : true
-          },
-          collection: 'log',
-          format: format.combine(format.timestamp(), format.json())
-        })
-      ],
-    }),
+    //     }),
+    //     new MongoDB({
+    //       level: 'info',
+    //       db: 'mongodb+srv://Tatiana:Mnbv9874@proyecto.vaxnwo8.mongodb.net/test?retryWrites=true&w=majority',
+    //       options: {
+    //         useUnifiedTopology : true
+    //       },
+    //       collection: 'log',
+    //       format: format.combine(format.timestamp(), format.json())
+    //     })
+    //   ],
+    // }),
     AuthModule, 
     UserModule, 
     QuestionModule,
