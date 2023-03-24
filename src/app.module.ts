@@ -43,9 +43,9 @@ import { ConfigModule } from '@nestjs/config';
       subscribers: [ QuestionSubscriber ],
       autoLoadEntities: true,
       synchronize: true,
-      extra: { 
-        "ssl": process.env.SSL 
-      },
+      // extra: { 
+      //   "ssl": process.env.SSL 
+      // },
     }),
     WinstonModule.forRoot({
       transports: [
