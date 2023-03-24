@@ -20,7 +20,7 @@ async function bootstrap() {
   
   SwaggerModule.setup('api', app, document);
 
-  // app.useLogger(app.get(WINSTON_MODULE_PROVIDER));
+  app.useLogger(app.get(WINSTON_MODULE_PROVIDER));
 
   //enable.cors
   app.enableCors({
