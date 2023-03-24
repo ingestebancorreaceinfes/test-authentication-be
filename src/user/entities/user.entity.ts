@@ -3,7 +3,7 @@ import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn, Cre
 @Entity('users')
 export class User {
     
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     id: string;
 
     @Column( {
@@ -29,7 +29,6 @@ export class User {
         default: true
     })
     is_active: boolean;
-
 
     @BeforeInsert()
     checkFieldsBeforeInsert() {

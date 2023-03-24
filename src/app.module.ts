@@ -37,7 +37,7 @@ import { ConfigModule } from '@nestjs/config';
       url: process.env.DATABASE_URL,
       entities: [ User, Question ],
       subscribers: [ QuestionSubscriber ],
-      autoLoadEntities: false,
+      autoLoadEntities: true,
       synchronize: true,
     }),
     WinstonModule.forRoot({
