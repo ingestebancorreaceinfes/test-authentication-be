@@ -3,7 +3,7 @@ import { UsersService } from './user.service';
 import { CreateUpdateUser } from './dto/createUpdateUser.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User')
 @Controller('users')
@@ -25,6 +25,7 @@ export class UsersController {
   }
 
   @Post()
+  @ApiCreatedResponse({ description: 'Created Succesfully' })
   @UseGuards(AuthGuard('jwt'))
   async store(@Body() data: CreateUserDto) {
     return await this.userService.store(data);
