@@ -17,7 +17,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   async show(@Param('id') id: string) {
     const user = await this.userService.findOne(id);
     if (user) return user;
@@ -26,19 +26,19 @@ export class UsersController {
 
   @Post()
   @ApiCreatedResponse({ description: 'Created Succesfully' })
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   async store(@Body() data: CreateUserDto) {
     return await this.userService.store(data);
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   async update(@Param('id') id: string, @Body() data: CreateUpdateUser) {
     return await this.userService.update(id, data);
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @HttpCode(204)
   async destroy(@Param('id') id: string) {
     await this.userService.destroy(id);
