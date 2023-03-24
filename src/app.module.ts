@@ -34,19 +34,11 @@ import { ConfigModule } from '@nestjs/config';
     // }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: process.env.DATABASE_URL
-      // host: process.env.HOST,
-      // port: parseInt(process.env.PORT),
-      // username: process.env.USERNAME,
-      // password: process.env.PASSWORD,
-      // database: process.env.DATABASE,
-      // entities: [ User, Question ],
-      // subscribers: [ QuestionSubscriber ],
-      // autoLoadEntities: true,
-      // synchronize: true,
-      // extra: { 
-      //   "ssl": process.env.SSL 
-      // },
+      url: process.env.DATABASE_URL,
+      entities: [ User, Question ],
+      subscribers: [ QuestionSubscriber ],
+      autoLoadEntities: true,
+      synchronize: true,
     }),
     // WinstonModule.forRoot({
     //   transports: [
