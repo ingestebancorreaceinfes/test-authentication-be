@@ -5,7 +5,7 @@ export class CreateUserDto {
 
     @ApiProperty({
         type: String,
-        description: 'This is the username',
+        description: 'This is the email',
     })
     @MinLength(5)
     @MaxLength(25)
@@ -13,6 +13,10 @@ export class CreateUserDto {
     @IsString()
     username: string;
 
+    @ApiProperty({
+        type: String,
+        description: 'The password must have a Uppercase, lowercase letter and a number',
+    })
     @IsString()
     @MinLength(6)
     @IsOptional()
@@ -23,19 +27,35 @@ export class CreateUserDto {
     })
     password: string;
 
+    @ApiProperty({
+        type: String,
+        description: 'This is the full name',
+    })
     @IsString()
     @MinLength(6)
     @MaxLength(150)
     full_name: string;
 
+    @ApiProperty({
+        type: String,
+        description: 'This is the image of someone people',
+    })
     @IsString()
     @IsOptional()
     image_url:string
 
+    @ApiProperty({
+        type: String,
+        description: 'This is a unique key',
+    })
     @IsString()
     @IsOptional()
     sub:string
 
+    @ApiProperty({
+        type: Boolean,
+        description: 'This allow know if a user is active or desactive in the system',
+    })
     @IsBoolean()
     is_active:boolean
 
