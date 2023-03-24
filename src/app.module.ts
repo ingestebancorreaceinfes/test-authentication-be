@@ -20,41 +20,53 @@ import { ConfigModule } from '@nestjs/config';
         isGlobal: true,
       }
     ),
+    // TypeOrmModule.forRoot({
+    // type: 'postgres',
+    // host: 'localhost',
+    // port: 5432,
+    // username: 'postgres',
+    // password: 'Ec1007256470',
+    // database: 'nest_db',
+    // entities: [ User, Question ],
+    // subscribers: [ QuestionSubscriber ],
+    // autoLoadEntities: true,
+    // synchronize: true
+    // }),
     TypeOrmModule.forRoot({
-    type: 'postgres',
-    host: 'localhost',
-    port: 5432,
-    username: 'postgres',
-    password: 'Ec1007256470',
-    database: 'nest_db',
-    entities: [ User, Question ],
-    subscribers: [ QuestionSubscriber ],
-    autoLoadEntities: true,
-    synchronize: true
-  }),
-  WinstonModule.forRoot({
-    transports: [
-      new transports.File({
-        // dirname: './../log/debug/', //path to where save loggin result 
-        filename: 'info.log', //name of file where will be saved logging result
-        level: 'info',
-        format: format.combine(format.timestamp(), format.json()),
-        
-      }),
-      new MongoDB({
-        level: 'info',
-        db: 'mongodb+srv://Tatiana:Mnbv9874@proyecto.vaxnwo8.mongodb.net/test?retryWrites=true&w=majority',
-        options: {
-          useUnifiedTopology : true
-        },
-        collection: 'log',
-        format: format.combine(format.timestamp(), format.json())
-      })
-    ],
-  }),
-  AuthModule, 
-  UserModule, 
-  QuestionModule,
+      type: 'postgres',
+      host: process.env.HOST,
+      port: parseInt(process.env.PORT),
+      username: process.env.USERNAME,
+      password: process.env.PASSWORD,
+      database: process.env.DATABASE,
+      entities: [ User, Question ],
+      subscribers: [ QuestionSubscriber ],
+      autoLoadEntities: true,
+      synchronize: true
+    }),
+    WinstonModule.forRoot({
+      transports: [
+        new transports.File({
+          // dirname: './../log/debug/', //path to where save loggin result 
+          filename: 'info.log', //name of file where will be saved logging result
+          level: 'info',
+          format: format.combine(format.timestamp(), format.json()),
+          
+        }),
+        new MongoDB({
+          level: 'info',
+          db: 'mongodb+srv://Tatiana:Mnbv9874@proyecto.vaxnwo8.mongodb.net/test?retryWrites=true&w=majority',
+          options: {
+            useUnifiedTopology : true
+          },
+          collection: 'log',
+          format: format.combine(format.timestamp(), format.json())
+        })
+      ],
+    }),
+    AuthModule, 
+    UserModule, 
+    QuestionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
