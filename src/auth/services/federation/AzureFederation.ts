@@ -1,5 +1,6 @@
 import { BadRequestException, Logger } from "@nestjs/common";
 import { JwtService } from '@nestjs/jwt';
+import { ErrorMessages } from "src/common/enum/error-messages.enum";
 
 export class AzureFederation implements IFederation{
     public async tokenValidate(token: string): Promise<any> {
@@ -8,7 +9,7 @@ export class AzureFederation implements IFederation{
       type Payload = {
         tid : string,
         preferred_username: string,
-        sub: string
+        sub: string,
         name: string,
       }
 
@@ -38,7 +39,7 @@ export class AzureFederation implements IFederation{
         // invalid token
         const logger = new Logger("AzureFederation");
         logger.error(error);
-        throw new BadRequestException("Error de validación de token");
+        throw new BadRequestException(ErrorMessages.NOT_VALID_TOKEN);
       });
 
       if(!ticket){

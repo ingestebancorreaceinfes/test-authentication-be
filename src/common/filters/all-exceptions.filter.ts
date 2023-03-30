@@ -1,18 +1,14 @@
-import {
-    ExceptionFilter,
-    Catch,
-    ArgumentsHost,
-    HttpException,
-    HttpStatus,
-  } from '@nestjs/common';
-  import { HttpAdapterHost } from '@nestjs/core';
+import { HttpService } from '@nestjs/axios';
+import { ExceptionFilter,Catch,ArgumentsHost,HttpException,HttpStatus } from '@nestjs/common';
+import { HttpAdapterHost } from '@nestjs/core';
+import { firstValueFrom } from 'rxjs';
 import { ErrorMessages } from '../enum/error-messages.enum';
-  
+
   @Catch()
   export class AllExceptionsFilter implements ExceptionFilter {
     constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
   
-    catch(exception: unknown, host: ArgumentsHost): void {
+    async catch(exception: Error, host: ArgumentsHost): Promise<any> {
       // In certain situations `httpAdapter` might not be available in the
       // constructor method, thus we should resolve it here.
       const { httpAdapter } = this.httpAdapterHost;
@@ -32,8 +28,28 @@ import { ErrorMessages } from '../enum/error-messages.enum';
         httpMessage = reqException["error"]
         requestException = reqException["message"]
       }
-            
+
+      //Hacer seguimiento al error para conocer el path_file y line
+      const parse =  (await import('stack-trace')).parse;
+      const trace = parse(exception);
+      // console.log(trace);
+
       //Consumir servicio para registrar el error en base de datos.
+      const httpService = new HttpService();
+
+      if(typeof process.env.ALLOW_LOG_REGISTER !== undefined){
+        if(process.env.ALLOW_LOG_REGISTER==='true'){
+          firstValueFrom(httpService.post('http://localhost:3002/api/v1/audit/error', {
+            "status_code": httpStatus,
+            "error_message": requestException,
+            "file_path": trace[0].getFileName(),
+            "line": trace[0].getLineNumber(),
+            "endpoint": httpAdapter.getRequestUrl(ctx.getRequest()),
+            "error_date": new Date,
+            "application_name": "enlazaa-test-factory"
+          }));
+        }
+      }
       
       const responseBody = {
         statusCode: httpStatus,

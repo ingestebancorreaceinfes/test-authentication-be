@@ -1,23 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Question } from './entities/question.entity';
 
 @Injectable()
 export class QuestionService {
-  constructor(@InjectRepository(Question) private repo: Repository<Question>) { }
-
+  constructor(@InjectRepository(Question) private questionRespository: Repository<Question>) {}
+  
   createOne(product: Question): Promise<Question> {
-    return this.repo.save(product);
+    return this.questionRespository.save(product);
   }
 
   getAll(): Promise<Question[]> {
-    return this.repo.find();
+    return this.questionRespository.find();
   }
 
-  async updateOne(id: string, { enunciado }: Question): Promise<Question> {
-    const question = await this.repo.findOne({where: {id}});
-    return this.repo.save({ ...question, enunciado })
+  async update(id: string, data : Question): Promise<Question> {
+    const question = await this.questionRespository.findOne({where: {id}});
+    
+    if(!question) throw new NotFoundException();
+
+    Object.assign(question, data);
+
+    return this.questionRespository.save(question);
   }
 
 }

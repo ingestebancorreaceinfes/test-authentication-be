@@ -27,9 +27,9 @@ export class QuestionController {
   }
 
   @Put(':id')
-  async updateQuestion(@Param('id') id: string,@Body() body: Question): Promise<Question> {
+  async updateQuestion(@Param('id') id: string, @Body() body: Question): Promise<Question> {
     try {
-      return await this.questionService.updateOne(id, body);
+      return await this.questionService.update(id, body);
     } catch (error) {
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
